@@ -56,7 +56,7 @@ public class BlockChainSigned implements IBlockChain {
     @Override
     public void Print() throws NoSuchAlgorithmException, NoSuchProviderException {
         for (int i = 0; i < blockChainLength; i++) {
-            Block block = blockChain.get(i);
+            var block = blockChain.get(i);
             System.out.println("~~~~~~~~~ " + block.GetBlockNumber() + " ~~~~~~~~~");
             System.out.println("prev hash: " + (block.GetPrevHash() != null ? new String(Hex.encode(block.GetPrevHash())) : ""));
             for (String s : block.GetData()) System.out.println(s);

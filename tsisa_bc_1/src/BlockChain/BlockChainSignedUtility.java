@@ -26,12 +26,12 @@ public class BlockChainSignedUtility {
             builder.append(s);
         }
 
-        var digest = MessageDigest.getInstance(DIGEST_ALGORITHM,"BC");
+        var digest = MessageDigest.getInstance(DIGEST_ALGORITHM);
 
         return digest.digest(Concat(block.GetPrevHash(), builder.toString().getBytes(StandardCharsets.UTF_8)));
     }
 
-    public static byte[] Concat(byte[] a, byte[] b) {
+    private static byte[] Concat(byte[] a, byte[] b) {
         if (a == null)
             return b;
 
@@ -51,35 +51,36 @@ public class BlockChainSignedUtility {
         var publicKeyHex = Files.readAllBytes(Paths.get("public.key"));
         var privateKeyHex = Files.readAllBytes(Paths.get("private.key"));
 
-        PublicKey publicKey = ConvertArrayToPublicKey(Hex.decode(publicKeyHex), KEY_ALGORITHM);
-        PrivateKey privateKey = ConvertArrayToPrivateKey(Hex.decode(privateKeyHex), KEY_ALGORITHM);
+        var publicKey = ConvertArrayToPublicKey(Hex.decode(publicKeyHex));
+        var privateKey = ConvertArrayToPrivateKey(Hex.decode(privateKeyHex));
 
         return new KeyPair(publicKey, privateKey);
     }
 
-    public static PublicKey ConvertArrayToPublicKey(byte[] encoded, String algorithm) throws Exception {
+    private static PublicKey ConvertArrayToPublicKey(byte[] encoded) throws Exception {
         var pubKeySpec = new X509EncodedKeySpec(encoded);
-        var keyFactory = KeyFactory.getInstance(algorithm);
+        var keyFactory = KeyFactory.getInstance(BlockChainSignedUtility.KEY_ALGORITHM);
 
         return keyFactory.generatePublic(pubKeySpec);
     }
 
-    public static PrivateKey ConvertArrayToPrivateKey(byte[] encoded, String algorithm) throws Exception {
+    private static PrivateKey ConvertArrayToPrivateKey(byte[] encoded) throws Exception {
         var keySpec = new PKCS8EncodedKeySpec(encoded);
-        var keyFactory = KeyFactory.getInstance(algorithm);
+        var keyFactory = KeyFactory.getInstance(BlockChainSignedUtility.KEY_ALGORITHM);
 
         return keyFactory.generatePrivate(keySpec);
     }
 
     public static byte[] GenerateRSAPSSSignature(PrivateKey privateKey, byte[] input) throws GeneralSecurityException {
-        Signature signature = Signature.getInstance(SIGN_ALGORITHM, "BC");
+        var signature = Signature.getInstance(SIGN_ALGORITHM);
         signature.initSign(privateKey);
         signature.update(input);
+
         return signature.sign();
     }
 
     public static boolean VerifyRSAPSSSignature(PublicKey publicKey, byte[] input, byte[] encSignature) throws GeneralSecurityException {
-        var signature = Signature.getInstance(SIGN_ALGORITHM, "BC");
+        var signature = Signature.getInstance(SIGN_ALGORITHM);
         signature.initVerify(publicKey);
         signature.update(input);
 
