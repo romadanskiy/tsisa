@@ -38,7 +38,7 @@ public class BlockChainSigned implements IBlockChain {
 
             try {
                 prevHash = BlockChainSignedUtility.GetHash(block);
-                block.SetSign(BlockChainSignedUtility.GenerateRSAPSSSignature(keyPair.getPrivate(), prevHash));
+                block.SetSign(BlockChainSignedUtility.GenerateSignature(keyPair.getPrivate(), prevHash));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -80,7 +80,7 @@ public class BlockChainSigned implements IBlockChain {
 
         prevHash = BlockChainSignedUtility.GetHash(blockChain.get(blockNumber));
 
-        return BlockChainSignedUtility.VerifyRSAPSSSignature(keyPair.getPublic(), prevHash, blockChain.get(blockNumber).GetSign());
+        return BlockChainSignedUtility.VerifySignature(keyPair.getPublic(), prevHash, blockChain.get(blockNumber).GetSign());
     }
 
     @Override
@@ -93,7 +93,7 @@ public class BlockChainSigned implements IBlockChain {
 
             prevHash = BlockChainSignedUtility.GetHash(blockChain.get(i));
 
-            if (!BlockChainSignedUtility.VerifyRSAPSSSignature(keyPair.getPublic(), prevHash, blockChain.get(i).GetSign())) {
+            if (!BlockChainSignedUtility.VerifySignature(keyPair.getPublic(), prevHash, blockChain.get(i).GetSign())) {
                 return false;
             }
         }

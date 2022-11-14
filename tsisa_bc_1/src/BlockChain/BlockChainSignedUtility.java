@@ -20,7 +20,7 @@ public class BlockChainSignedUtility {
         Security.addProvider(new BouncyCastleProvider());
     }
 
-    public static byte[] GetHash(Block block) throws NoSuchAlgorithmException, NoSuchProviderException {
+    public static byte[] GetHash(Block block) throws NoSuchAlgorithmException {
         var builder = new StringBuilder();
         for (var s : block.GetData()) {
             builder.append(s);
@@ -71,7 +71,7 @@ public class BlockChainSignedUtility {
         return keyFactory.generatePrivate(keySpec);
     }
 
-    public static byte[] GenerateRSAPSSSignature(PrivateKey privateKey, byte[] input) throws GeneralSecurityException {
+    public static byte[] GenerateSignature(PrivateKey privateKey, byte[] input) throws GeneralSecurityException {
         var signature = Signature.getInstance(SIGN_ALGORITHM);
         signature.initSign(privateKey);
         signature.update(input);
@@ -79,7 +79,7 @@ public class BlockChainSignedUtility {
         return signature.sign();
     }
 
-    public static boolean VerifyRSAPSSSignature(PublicKey publicKey, byte[] input, byte[] encSignature) throws GeneralSecurityException {
+    public static boolean VerifySignature(PublicKey publicKey, byte[] input, byte[] encSignature) throws GeneralSecurityException {
         var signature = Signature.getInstance(SIGN_ALGORITHM);
         signature.initVerify(publicKey);
         signature.update(input);
