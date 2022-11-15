@@ -10,7 +10,7 @@ import java.security.KeyPair;
 import java.security.PublicKey;
 
 public class Main {
-    private static Arbiter arbiter = new Arbiter();
+    private static final Arbiter arbiter = new Arbiter();
 
     public static void main(String[] args) {
         try {
